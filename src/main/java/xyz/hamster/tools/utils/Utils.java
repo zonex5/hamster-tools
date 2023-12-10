@@ -1,5 +1,6 @@
 package xyz.hamster.tools.utils;
 
+@Deprecated
 public class Utils {
     public static String capitalizeString(String str) {
         return str == null

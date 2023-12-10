@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-public @interface GenerateDTO {
+public @interface DataTransferObject {
     /**
      * Generate builder
      */
@@ -20,4 +20,8 @@ public @interface GenerateDTO {
      * Generate default constructor
      */
     boolean constructor() default false;
+
+    String destinationPackage() default "";
+
+    String nameSuffix() default "Dto";
 }

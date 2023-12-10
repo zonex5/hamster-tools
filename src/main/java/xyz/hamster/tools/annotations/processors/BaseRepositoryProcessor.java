@@ -17,14 +17,12 @@ import static xyz.hamster.tools.annotations.processors.ProcessorUtils.getPackage
 import static xyz.hamster.tools.utils.Utils.replaceIfEndsWith;
 import static xyz.hamster.tools.utils.Utils.stringHasValue;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
-@AutoService(Processor.class)
-public class BaseRepositoryProcessor extends AbstractProcessor {
+public class BaseRepositoryProcessor {
 
     //todo
     // избавится от метода init
     // добавлять в репозиторий кастомные методы (передавая массив методов в параметрах аннотации)
-
+/*
     private static final String JPA_REPOSITORY = "xyz.hamster.tools.annotations.GenerateRepository";
     private static final String REACTIVE_REPOSITORY = "xyz.hamster.tools.annotations.GenerateReactiveRepository";
 
@@ -60,7 +58,7 @@ public class BaseRepositoryProcessor extends AbstractProcessor {
                     AnnotationMirror annotationMirror = getAnnotationMirror(element, annotation);
                     TypeName entityIdType = EntityIdType.valueOf(Objects.requireNonNull(getPropertyValue("id", annotationMirror)).toString()).getType();
                     Boolean includeActive = (Boolean) getPropertyValue("activeMethod", annotationMirror);
-                    String destinationPackage = (String) getPropertyValue("destination", annotationMirror);
+                    String destinationPackage = (String) getPropertyValue("destinationPackage", annotationMirror);
 
                     String className = element.getSimpleName().toString();
                     String packageOfEntity = getPackageName(element, elements);
@@ -138,5 +136,5 @@ public class BaseRepositoryProcessor extends AbstractProcessor {
             }
         }
         return null;
-    }
+    }*/
 }
