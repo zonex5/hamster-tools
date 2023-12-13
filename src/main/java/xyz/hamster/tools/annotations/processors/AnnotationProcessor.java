@@ -22,27 +22,6 @@ public abstract class AnnotationProcessor extends AbstractProcessor {
         elements = processingEnv.getElementUtils();
     }
 
-    /*protected AnnotationMirror getAnnotationMirror(Element element, TypeElement annotation) {
-        for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
-            if (annotationMirror.getAnnotationType().asElement().equals(annotation)) {
-                return annotationMirror;
-            }
-        }
-        return null;
-    }
-
-    protected Object getPropertyValue(String property, AnnotationMirror annotationMirror) {
-        Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = processingEnv.getElementUtils().getElementValuesWithDefaults(annotationMirror);
-        for (ExecutableElement key : elementValues.keySet()) {
-            String propertyName = key.getSimpleName().toString();
-            Object propertyValue = elementValues.get(key).getValue();
-            if (propertyName.equals(property)) {
-                return propertyValue;
-            }
-        }
-        return null;
-    }*/
-
     protected MethodSpec createGetter(Element e) {
         String name = e.getSimpleName().toString();
         return MethodSpec.methodBuilder("get" + capitalize(name))

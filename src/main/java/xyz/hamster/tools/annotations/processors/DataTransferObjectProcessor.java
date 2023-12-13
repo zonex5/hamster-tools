@@ -1,13 +1,21 @@
 package xyz.hamster.tools.annotations.processors;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.*;
-import xyz.hamster.tools.annotations.NotInclude;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 import xyz.hamster.tools.annotations.DataTransferObject;
+import xyz.hamster.tools.annotations.NotInclude;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
