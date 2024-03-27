@@ -72,6 +72,14 @@ public abstract class AnnotationProcessor extends AbstractProcessor {
         return constructorBuilder.build();
     }
 
+    protected MethodSpec createBuilderStaticMethod() {
+        return MethodSpec.methodBuilder("builder")
+                .addModifiers(Modifier.STATIC, Modifier.PUBLIC)
+                .addStatement("return new Builder()")
+                .returns(ClassName.get("", "Builder"))
+                .build();
+    }
+
     protected List<Element> getFields(Element element) {
         return element.getEnclosedElements().stream()
                 .filter(e -> e.getKind().isField())

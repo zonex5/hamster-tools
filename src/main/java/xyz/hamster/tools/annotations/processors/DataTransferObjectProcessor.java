@@ -53,6 +53,7 @@ public class DataTransferObjectProcessor extends AnnotationProcessor {
                     if (element.getAnnotation(DataTransferObject.class).builder()) {
                         classItemBuilder.addType(createBuilder(suitableFields, className));
                         classItemBuilder.addMethod(createBuilderConstructor(suitableFields));
+                        classItemBuilder.addMethod(createBuilderStaticMethod());
                     }
 
                     // add default constructor
