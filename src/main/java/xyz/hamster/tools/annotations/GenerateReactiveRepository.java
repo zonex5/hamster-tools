@@ -16,8 +16,7 @@ public @interface GenerateReactiveRepository {
      */
     EntityIdType id() default EntityIdType.INTEGER;
 
-    /**
-     * Add 'getAllByActive' method
-     */
-    boolean activeMethod() default false;
+    boolean hasActiveFlag() default false;
+
+    String destinationPackage() default "";
 }

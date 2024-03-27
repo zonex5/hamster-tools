@@ -19,5 +19,7 @@ public @interface GenerateRepository {
     /**
      * Add 'getAllByActive' method
      */
-    boolean activeMethod() default false;
+    boolean hasActiveFlag() default false;
+
+    String destinationPackage() default "";
 }
