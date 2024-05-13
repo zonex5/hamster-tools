@@ -12,11 +12,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface GenerateReactiveRepository {
     /**
-     * Entity id type
+     * Entity ID type
      */
     EntityIdType id() default EntityIdType.INTEGER;
 
+    /**
+     * Add 'getAllByActive' method
+     */
     boolean hasActiveFlag() default false;
 
+    /**
+     * Destination package of class. Default - the same package as entity class
+     */
     String destinationPackage() default "";
 }

@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Mark the fields that need to be excluded from DTO
+ * Mark the field that need to be excluded from DTO
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface NotInclude {
+public @interface Exclude {
 }

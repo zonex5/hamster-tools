@@ -1,12 +1,9 @@
 package xyz.hamster.tools.annotations.processors;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 import xyz.hamster.tools.annotations.DataTransferObject;
-import xyz.hamster.tools.annotations.NotInclude;
+import xyz.hamster.tools.annotations.Exclude;
 
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -36,7 +33,7 @@ public class DataTransferObjectProcessor extends AnnotationProcessor {
 
                     // exclude marked fields
                     List<Element> suitableFields = getFields(element).stream()
-                            .filter(e -> e.getAnnotation(NotInclude.class) == null)
+                            .filter(e -> e.getAnnotation(Exclude.class) == null)
                             .collect(Collectors.toList());
 
                     List<FieldSpec> fields = suitableFields.stream().map(this::createField).collect(Collectors.toList());
@@ -61,6 +58,16 @@ public class DataTransferObjectProcessor extends AnnotationProcessor {
                         classItemBuilder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
                     }
 
+                    // all Args Constructor
+                    if (element.getAnnotation(DataTransferObject.class).allArgsConstructor()) {
+                        classItemBuilder.addMethod(createArgsConstructor(suitableFields));
+                    }
+
+                    // generate copy data method
+                    if (element.getAnnotation(DataTransferObject.class).copyDataMethod()) {
+                        classItemBuilder.addMethod(generateCopyDataMethod(suitableFields, element));
+                    }
+
                     // write generated java file
                     JavaFile.builder(getDestinationPackage(element), classItemBuilder.build())
                             .build()
@@ -75,18 +82,20 @@ public class DataTransferObjectProcessor extends AnnotationProcessor {
 
     private String getDestinationPackage(Element element) {
         String packageName = element.getAnnotation(DataTransferObject.class).destinationPackage();
-        if (!stringHasValue(packageName)) {
-            packageName = getPackageName(element);
-        }
-        return packageName;
+        return stringHasValue(packageName) ? packageName : getPackageName(element);
     }
 
     private String getDestinationClassName(Element element) {
-        String nameSuffix = element.getAnnotation(DataTransferObject.class).nameSuffix();
-        String className = replaceIfEndsWith(element.getSimpleName().toString(), "Entity", nameSuffix);
-        if (!className.endsWith(nameSuffix)) {
-            className += nameSuffix;
-        }
-        return className;
+        String providedName = element.getAnnotation(DataTransferObject.class).className();
+        return stringHasValue(providedName) ? providedName : replaceIfEndsWith(element.getSimpleName().toString(), "Entity", "") + "Dto";
+    }
+
+    private MethodSpec generateCopyDataMethod(List<Element> fields, Element element) {
+        String paramName = "entity";
+        var builder = MethodSpec.methodBuilder("fromEntity")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ClassName.get(element.asType()), paramName);
+        fields.forEach(f -> builder.addStatement("this." + f.getSimpleName() + " = " + paramName + ".get" + capitalize(f.getSimpleName().toString()) + "()"));
+        return builder.build();
     }
 }
