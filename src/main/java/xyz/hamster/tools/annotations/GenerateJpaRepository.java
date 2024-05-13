@@ -6,13 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Generate Repository for marked type
+ * Generate Repository for marked entity
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
-public @interface GenerateRepository {
+public @interface GenerateJpaRepository {
     /**
-     * Entity id type
+     * Entity ID type
      */
     EntityIdType id() default EntityIdType.INTEGER;
 
@@ -21,5 +21,8 @@ public @interface GenerateRepository {
      */
     boolean hasActiveFlag() default false;
 
+    /**
+     * Destination package of class. Default - the same package as entity class
+     */
     String destinationPackage() default "";
 }

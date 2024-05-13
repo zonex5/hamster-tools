@@ -61,6 +61,11 @@ public class DataTransferObjectProcessor extends AnnotationProcessor {
                         classItemBuilder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
                     }
 
+                    // all Args Constructor
+                    if (element.getAnnotation(DataTransferObject.class).allArgsConstructor()) {
+                        classItemBuilder.addMethod(createArgsConstructor(suitableFields));
+                    }
+
                     // write generated java file
                     JavaFile.builder(getDestinationPackage(element), classItemBuilder.build())
                             .build()

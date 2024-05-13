@@ -3,7 +3,7 @@ package xyz.hamster.tools.annotations.processors;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
 import xyz.hamster.tools.annotations.EntityIdType;
-import xyz.hamster.tools.annotations.GenerateRepository;
+import xyz.hamster.tools.annotations.GenerateJpaRepository;
 
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -16,10 +16,10 @@ import javax.lang.model.element.TypeElement;
 import java.io.IOException;
 import java.util.Set;
 
-@SupportedAnnotationTypes("xyz.hamster.tools.annotations.GenerateRepository")
+@SupportedAnnotationTypes("xyz.hamster.tools.annotations.GenerateJpaRepository")
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 @AutoService(Processor.class)
-public class GenerateRepositoryProcessor extends AnnotationProcessor {
+public class GenerateJpaRepositoryProcessor extends AnnotationProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -29,7 +29,7 @@ public class GenerateRepositoryProcessor extends AnnotationProcessor {
                     checkElementKindClass(element);
 
                     ClassName entityType = ClassName.get(getPackageName(element), element.getSimpleName().toString());
-                    TypeName entityIdType = EntityIdType.valueOf(element.getAnnotation(GenerateRepository.class).id().toString()).getType();
+                    TypeName entityIdType = EntityIdType.valueOf(element.getAnnotation(GenerateJpaRepository.class).id().toString()).getType();
                     TypeName collectionType = ParameterizedTypeName.get(ClassName.get("java.util", "List"), entityType);
                     TypeName crudInterface = ParameterizedTypeName.get(ClassName.get("org.springframework.data.jpa.repository", "JpaRepository"), entityType, entityIdType);
 
@@ -39,7 +39,7 @@ public class GenerateRepositoryProcessor extends AnnotationProcessor {
                             .build();
 
                     // add 'getAllByActive' method
-                    if (Boolean.TRUE.equals(element.getAnnotation(GenerateRepository.class).hasActiveFlag())) {
+                    if (Boolean.TRUE.equals(element.getAnnotation(GenerateJpaRepository.class).hasActiveFlag())) {
                         MethodSpec getAllByActive = MethodSpec.methodBuilder("getAllByActive")
                                 .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
                                 .addParameter(boolean.class, "active")
@@ -61,7 +61,7 @@ public class GenerateRepositoryProcessor extends AnnotationProcessor {
     }
 
     private String getDestinationPackage(Element element) {
-        String packageName = element.getAnnotation(GenerateRepository.class).destinationPackage();
+        String packageName = element.getAnnotation(GenerateJpaRepository.class).destinationPackage();
         if (!stringHasValue(packageName)) {
             packageName = getPackageName(element);
         }
