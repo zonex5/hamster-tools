@@ -1,10 +1,7 @@
 package xyz.hamster.tools.annotations.processors;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 import xyz.hamster.tools.annotations.DataTransferObject;
 import xyz.hamster.tools.annotations.Exclude;
 
@@ -66,6 +63,11 @@ public class DataTransferObjectProcessor extends AnnotationProcessor {
                         classItemBuilder.addMethod(createArgsConstructor(suitableFields));
                     }
 
+                    // generate copy data method
+                    if (element.getAnnotation(DataTransferObject.class).copyDataMethod()) {
+                        classItemBuilder.addMethod(generateCopyDataMethod(suitableFields, element));
+                    }
+
                     // write generated java file
                     JavaFile.builder(getDestinationPackage(element), classItemBuilder.build())
                             .build()
@@ -86,5 +88,14 @@ public class DataTransferObjectProcessor extends AnnotationProcessor {
     private String getDestinationClassName(Element element) {
         String providedName = element.getAnnotation(DataTransferObject.class).className();
         return stringHasValue(providedName) ? providedName : replaceIfEndsWith(element.getSimpleName().toString(), "Entity", "") + "Dto";
+    }
+
+    private MethodSpec generateCopyDataMethod(List<Element> fields, Element element) {
+        String paramName = "entity";
+        var builder = MethodSpec.methodBuilder("fromEntity")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ClassName.get(element.asType()), paramName);
+        fields.forEach(f -> builder.addStatement("this." + f.getSimpleName() + " = " + paramName + ".get" + capitalize(f.getSimpleName().toString()) + "()"));
+        return builder.build();
     }
 }

@@ -4,7 +4,7 @@
     <groupId>xyz.hamster.tools</groupId>
     <artifactId>hamster-tools</artifactId>
     <packaging>jar</packaging>
-    <version>0.3a</version>
+    <version>0.3b</version>
     <name>hamster-tools</name>
 
     <properties>

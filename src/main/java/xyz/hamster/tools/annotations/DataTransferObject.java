@@ -35,4 +35,9 @@ public @interface DataTransferObject {
      * Destination class name of DTO object. Default - original name + 'Dto'
      */
     String className() default "";
+
+    /**
+     * Generate copy data method
+     */
+    boolean copyDataMethod() default false;
 }
